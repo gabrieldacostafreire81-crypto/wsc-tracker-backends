@@ -1,0 +1,7 @@
+target/
+.idea/
+*.iml
+*.class
+wsc_tracker.db
+wsc_tracker.db-shm
+wsc_tracker.db-wal

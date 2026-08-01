@@ -2,10 +2,7 @@ package com.seuclube.wsctracker;
 
 import io.javalin.Javalin;
 import com.seuclube.wsctracker.dao.ConexaoSQLite;
-import com.seuclube.wsctracker.api.TimeResource;
-import com.seuclube.wsctracker.api.JogadorResource;
-import com.seuclube.wsctracker.api.TemporadaResource;
-import com.seuclube.wsctracker.api.EstatisticaResource;
+import com.seuclube.wsctracker.api.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,6 +13,9 @@ public class Main {
         JogadorResource jogadorResource = new JogadorResource();
         TemporadaResource temporadaResource = new TemporadaResource();
         EstatisticaResource estatisticaResource = new EstatisticaResource();
+        TransferenciaResource transferenciaResource = new TransferenciaResource();
+        CompeticaoResource competicaoResource = new CompeticaoResource();
+        TituloResource tituloResource = new TituloResource();
 
         Javalin app = Javalin.create(config -> {
             config.routes.get("/api/status", ctx -> ctx.result("WSC Tracker backend no ar!"));
@@ -35,6 +35,18 @@ public class Main {
             config.routes.get("/api/estatisticas", estatisticaResource::listar);
             config.routes.post("/api/estatisticas", estatisticaResource::registrar);
             config.routes.get("/api/estatisticas/{id}", estatisticaResource::buscarPorId);
+
+            config.routes.get("/api/transferencias", transferenciaResource::listar);
+            config.routes.post("/api/transferencias", transferenciaResource::criar);
+            config.routes.get("/api/transferencias/{id}", transferenciaResource::buscarPorId);
+
+            config.routes.get("/api/competicoes", competicaoResource::listarTodas);
+            config.routes.post("/api/competicoes", competicaoResource::criar);
+            config.routes.get("/api/competicoes/{id}", competicaoResource::buscarPorId);
+
+            config.routes.get("/api/titulos", tituloResource::listarPorTime);
+            config.routes.post("/api/titulos", tituloResource::criar);
+            config.routes.get("/api/titulos/{id}", tituloResource::buscarPorId);
         }).start(7000);
     }
 }

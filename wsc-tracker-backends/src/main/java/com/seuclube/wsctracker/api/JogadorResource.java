@@ -29,4 +29,8 @@ public class JogadorResource {
             ctx.json(jogador);
         }
     }
+    public void carreira(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        ctx.json(jogadorService.estatisticasCarreira(id));
+    }
 }

@@ -29,4 +29,13 @@ public class TimeResource {
             ctx.json(time);
         }
     }
+    public void totalJogadoresHistorico(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        ctx.json(java.util.Map.of("timeId", id, "totalJogadoresHistorico", timeService.totalJogadoresHistorico(id)));
+    }
+
+    public void estatisticasColetivas(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        ctx.json(timeService.estatisticasColetivas(id));
+    }
 }

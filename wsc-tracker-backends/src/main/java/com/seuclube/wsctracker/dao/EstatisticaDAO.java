@@ -110,4 +110,23 @@ public class EstatisticaDAO {
                 rs.getString("status")
         );
     }
+    /** Todas as estatísticas de TODOS os jogadores, em TODAS as temporadas de UM time — base do RF15. */
+    public List<EstatisticaJogadorTemporada> listarPorTime(int timeId) throws SQLException {
+        String sql = "SELECT e.* FROM estatistica_jogador_temporada e " +
+                "JOIN temporada t ON e.temporada_id = t.id " +
+                "WHERE t.time_id = ?";
+
+        List<EstatisticaJogadorTemporada> lista = new ArrayList<>();
+        try (Connection conn = ConexaoSQLite.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, timeId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapear(rs));
+                }
+            }
+        }
+        return lista;
+    }
 }

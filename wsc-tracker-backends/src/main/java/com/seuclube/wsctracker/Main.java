@@ -23,10 +23,13 @@ public class Main {
             config.routes.get("/api/times", timeResource::listarTodos);
             config.routes.post("/api/times", timeResource::criar);
             config.routes.get("/api/times/{id}", timeResource::buscarPorId);
+            config.routes.get("/api/times/{id}/total-jogadores", timeResource::totalJogadoresHistorico);
+            config.routes.get("/api/times/{id}/estatisticas-coletivas", timeResource::estatisticasColetivas);
 
             config.routes.get("/api/jogadores", jogadorResource::listarTodos);
             config.routes.post("/api/jogadores", jogadorResource::criar);
             config.routes.get("/api/jogadores/{id}", jogadorResource::buscarPorId);
+            config.routes.get("/api/jogadores/{id}/carreira", jogadorResource::carreira);
 
             config.routes.get("/api/temporadas", temporadaResource::listar);
             config.routes.post("/api/temporadas", temporadaResource::criar);

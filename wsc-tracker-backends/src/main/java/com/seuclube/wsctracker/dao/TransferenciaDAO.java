@@ -11,7 +11,7 @@ public class TransferenciaDAO {
     public Transferencia salvar(Transferencia t) throws SQLException {
         String sql = "INSERT INTO transferencia (jogador_id, temporada_id, time_origem, time_destino, valor, tipo, data) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, t.getJogadorId());
@@ -50,7 +50,7 @@ public class TransferenciaDAO {
 
     private List<Transferencia> listarComFiltro(String sql, int filtroId) throws SQLException {
         List<Transferencia> lista = new ArrayList<>();
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, filtroId);
@@ -65,7 +65,7 @@ public class TransferenciaDAO {
 
     public Transferencia buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM transferencia WHERE id = ?";
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
@@ -92,5 +92,24 @@ public class TransferenciaDAO {
                 rs.getString("tipo"),
                 rs.getString("data")
         );
+    }
+    /** Todas as transferências de todas as temporadas de UM time — base do RF13. */
+    public List<Transferencia> listarPorTimeCompleto(int timeId) throws SQLException {
+        String sql = "SELECT tr.* FROM transferencia tr " +
+                "JOIN temporada t ON tr.temporada_id = t.id " +
+                "WHERE t.time_id = ?";
+
+        List<Transferencia> lista = new ArrayList<>();
+        Connection conn = ConexaoSQLite.getConnection();        try (
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, timeId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapear(rs));
+                }
+            }
+        }
+        return lista;
     }
 }

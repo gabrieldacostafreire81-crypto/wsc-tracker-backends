@@ -10,8 +10,8 @@ public class TimeDAO {
 
     public Time salvar(Time time) throws SQLException {
         String sql = "INSERT INTO time (nome, temporada_fundacao, observacoes) VALUES (?, ?, ?)";
-        try (Connection conn = ConexaoSQLite.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, time.getNome());
             stmt.setInt(2, time.getTemporadaFundacao());
@@ -31,8 +31,8 @@ public class TimeDAO {
         String sql = "SELECT * FROM time";
         List<Time> times = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLite.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -44,8 +44,8 @@ public class TimeDAO {
 
     public Time buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM time WHERE id = ?";
-        try (Connection conn = ConexaoSQLite.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {

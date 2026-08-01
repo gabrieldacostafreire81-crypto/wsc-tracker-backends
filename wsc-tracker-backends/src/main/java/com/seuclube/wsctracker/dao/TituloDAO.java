@@ -10,7 +10,7 @@ public class TituloDAO {
 
     public Titulo salvar(Titulo t) throws SQLException {
         String sql = "INSERT INTO titulo (time_id, temporada_id, competicao_id) VALUES (?, ?, ?)";
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, t.getTimeId());
@@ -31,7 +31,7 @@ public class TituloDAO {
         String sql = "SELECT * FROM titulo WHERE time_id = ?";
         List<Titulo> lista = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, timeId);
@@ -46,7 +46,7 @@ public class TituloDAO {
 
     public Titulo buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM titulo WHERE id = ?";
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);

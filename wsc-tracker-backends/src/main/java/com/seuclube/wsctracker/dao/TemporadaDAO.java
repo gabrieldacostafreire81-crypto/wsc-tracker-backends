@@ -10,7 +10,7 @@ public class TemporadaDAO {
 
     public Temporada salvar(Temporada temporada) throws SQLException {
         String sql = "INSERT INTO temporada (time_id, numero, divisao, posicao_final, observacoes) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, temporada.getTimeId());
@@ -39,7 +39,7 @@ public class TemporadaDAO {
         String sql = "SELECT * FROM temporada";
         List<Temporada> temporadas = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -54,7 +54,7 @@ public class TemporadaDAO {
         String sql = "SELECT * FROM temporada WHERE time_id = ? ORDER BY numero";
         List<Temporada> temporadas = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, timeId);
@@ -69,7 +69,7 @@ public class TemporadaDAO {
 
     public Temporada buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM temporada WHERE id = ?";
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);

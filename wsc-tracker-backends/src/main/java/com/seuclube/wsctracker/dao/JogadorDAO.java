@@ -10,8 +10,8 @@ public class JogadorDAO {
 
     public Jogador salvar(Jogador jogador) throws SQLException {
         String sql = "INSERT INTO jogador (nome, posicao, nacionalidade, data_nascimento, time_atual_id) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = ConexaoSQLite.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, jogador.getNome());
             stmt.setString(2, jogador.getPosicao());
@@ -39,8 +39,8 @@ public class JogadorDAO {
         String sql = "SELECT * FROM jogador";
         List<Jogador> jogadores = new ArrayList<>();
 
-        try (Connection conn = ConexaoSQLite.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -52,8 +52,8 @@ public class JogadorDAO {
 
     public Jogador buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM jogador WHERE id = ?";
-        try (Connection conn = ConexaoSQLite.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {

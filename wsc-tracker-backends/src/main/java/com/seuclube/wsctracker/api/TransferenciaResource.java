@@ -38,4 +38,11 @@ public class TransferenciaResource {
             ctx.json(t);
         }
     }
+    private final com.seuclube.wsctracker.service.FinanceiroService financeiroService =
+            new com.seuclube.wsctracker.service.FinanceiroService();
+
+    public void fluxoFinanceiro(Context ctx) throws SQLException {
+        int timeId = Integer.parseInt(ctx.pathParam("id"));
+        ctx.json(financeiroService.fluxoPorTime(timeId));
+    }
 }

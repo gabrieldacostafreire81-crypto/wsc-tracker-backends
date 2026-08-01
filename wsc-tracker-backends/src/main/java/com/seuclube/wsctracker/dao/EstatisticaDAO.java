@@ -14,7 +14,7 @@ public class EstatisticaDAO {
                 "cartoes_amarelos, cartoes_vermelhos, valor_mercado, status) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, e.getJogadorId());
@@ -53,7 +53,7 @@ public class EstatisticaDAO {
 
     private List<EstatisticaJogadorTemporada> listarComFiltro(String sql, int filtroId) throws SQLException {
         List<EstatisticaJogadorTemporada> lista = new ArrayList<>();
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();       try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, filtroId);
@@ -68,7 +68,7 @@ public class EstatisticaDAO {
 
     public EstatisticaJogadorTemporada buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM estatistica_jogador_temporada WHERE id = ?";
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();        try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
@@ -117,7 +117,7 @@ public class EstatisticaDAO {
                 "WHERE t.time_id = ?";
 
         List<EstatisticaJogadorTemporada> lista = new ArrayList<>();
-        try (Connection conn = ConexaoSQLite.getConnection();
+        Connection conn = ConexaoSQLite.getConnection();       try (
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, timeId);

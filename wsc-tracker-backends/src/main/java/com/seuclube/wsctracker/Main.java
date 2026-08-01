@@ -18,6 +18,10 @@ public class Main {
         TituloResource tituloResource = new TituloResource();
 
         Javalin app = Javalin.create(config -> {
+            config.bundledPlugins.enableCors(cors -> {
+                cors.addRule(it -> it.anyHost());
+            });
+
             config.routes.get("/api/status", ctx -> ctx.result("WSC Tracker backend no ar!"));
 
             config.routes.get("/api/times", timeResource::listarTodos);
@@ -25,6 +29,7 @@ public class Main {
             config.routes.get("/api/times/{id}", timeResource::buscarPorId);
             config.routes.get("/api/times/{id}/total-jogadores", timeResource::totalJogadoresHistorico);
             config.routes.get("/api/times/{id}/estatisticas-coletivas", timeResource::estatisticasColetivas);
+            config.routes.get("/api/times/{id}/financeiro", transferenciaResource::fluxoFinanceiro);
 
             config.routes.get("/api/jogadores", jogadorResource::listarTodos);
             config.routes.post("/api/jogadores", jogadorResource::criar);

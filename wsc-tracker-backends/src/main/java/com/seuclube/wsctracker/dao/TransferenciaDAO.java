@@ -112,4 +112,33 @@ public class TransferenciaDAO {
         }
         return lista;
     }
+    public boolean atualizar(Transferencia t) throws SQLException {
+        String sql = "UPDATE transferencia SET jogador_id = ?, temporada_id = ?, time_origem = ?, time_destino = ?, " +
+                "valor = ?, tipo = ?, data = ? WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, t.getJogadorId());
+            stmt.setInt(2, t.getTemporadaId());
+            stmt.setString(3, t.getTimeOrigem());
+            stmt.setString(4, t.getTimeDestino());
+            if (t.getValor() != null) {
+                stmt.setDouble(5, t.getValor());
+            } else {
+                stmt.setNull(5, Types.REAL);
+            }
+            stmt.setString(6, t.getTipo());
+            stmt.setString(7, t.getData());
+            stmt.setInt(8, t.getId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM transferencia WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

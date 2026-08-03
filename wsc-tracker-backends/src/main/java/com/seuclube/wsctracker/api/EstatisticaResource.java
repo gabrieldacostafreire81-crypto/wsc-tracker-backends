@@ -28,6 +28,19 @@ public class EstatisticaResource {
         EstatisticaJogadorTemporada criada = estatisticaService.registrar(estatistica);
         ctx.status(201).json(criada);
     }
+    public void atualizar(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        EstatisticaJogadorTemporada estatistica = ctx.bodyAsClass(EstatisticaJogadorTemporada.class);
+        estatistica.setId(id);
+        boolean ok = estatisticaService.atualizar(estatistica);
+        if (ok) ctx.json(estatistica); else ctx.status(404).result("Não encontrado");
+    }
+
+    public void excluir(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        boolean ok = estatisticaService.excluir(id);
+        if (ok) ctx.status(204); else ctx.status(404).result("Não encontrado");
+    }
 
     public void buscarPorId(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));

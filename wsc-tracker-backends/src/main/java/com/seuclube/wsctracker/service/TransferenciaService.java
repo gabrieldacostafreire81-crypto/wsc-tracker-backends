@@ -13,6 +13,13 @@ public class TransferenciaService {
     public Transferencia criar(Transferencia t) throws SQLException {
         return transferenciaDAO.salvar(t);
     }
+    public boolean atualizar(Transferencia t) throws SQLException {
+        return transferenciaDAO.atualizar(t);
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        return transferenciaDAO.excluir(id);
+    }
 
     public List<Transferencia> listarPorJogador(int jogadorId) throws SQLException {
         return transferenciaDAO.listarPorJogador(jogadorId);

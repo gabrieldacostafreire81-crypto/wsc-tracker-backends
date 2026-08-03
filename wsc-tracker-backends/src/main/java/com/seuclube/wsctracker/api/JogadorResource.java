@@ -20,6 +20,20 @@ public class JogadorResource {
         ctx.status(201).json(criado);
     }
 
+    public void atualizar(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        Jogador jogador = ctx.bodyAsClass(Jogador.class);
+        jogador.setId(id);
+        boolean ok = jogadorService.atualizar(jogador);
+        if (ok) ctx.json(jogador); else ctx.status(404).result("Jogador não encontrado");
+    }
+
+    public void excluir(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        boolean ok = jogadorService.excluir(id);
+        if (ok) ctx.status(204); else ctx.status(404).result("Jogador não encontrado");
+    }
+
     public void buscarPorId(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));
         Jogador jogador = jogadorService.buscarPorId(id);
@@ -29,6 +43,7 @@ public class JogadorResource {
             ctx.json(jogador);
         }
     }
+
     public void carreira(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));
         ctx.json(jogadorService.estatisticasCarreira(id));

@@ -78,4 +78,30 @@ public class JogadorDAO {
                 timeAtualIdObj
         );
     }
+    public boolean atualizar(Jogador jogador) throws SQLException {
+        String sql = "UPDATE jogador SET nome = ?, posicao = ?, nacionalidade = ?, data_nascimento = ?, time_atual_id = ? WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, jogador.getNome());
+            stmt.setString(2, jogador.getPosicao());
+            stmt.setString(3, jogador.getNacionalidade());
+            stmt.setString(4, jogador.getDataNascimento());
+            if (jogador.getTimeAtualId() != null) {
+                stmt.setInt(5, jogador.getTimeAtualId());
+            } else {
+                stmt.setNull(5, Types.INTEGER);
+            }
+            stmt.setInt(6, jogador.getId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM jogador WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

@@ -95,4 +95,30 @@ public class TemporadaDAO {
                 rs.getString("observacoes")
         );
     }
+    public boolean atualizar(Temporada temporada) throws SQLException {
+        String sql = "UPDATE temporada SET time_id = ?, numero = ?, divisao = ?, posicao_final = ?, observacoes = ? WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, temporada.getTimeId());
+            stmt.setInt(2, temporada.getNumero());
+            stmt.setString(3, temporada.getDivisao());
+            if (temporada.getPosicaoFinal() != null) {
+                stmt.setInt(4, temporada.getPosicaoFinal());
+            } else {
+                stmt.setNull(4, Types.INTEGER);
+            }
+            stmt.setString(5, temporada.getObservacoes());
+            stmt.setInt(6, temporada.getId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM temporada WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

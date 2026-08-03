@@ -13,6 +13,13 @@ public class TituloService {
     public Titulo criar(Titulo t) throws SQLException {
         return tituloDAO.salvar(t);
     }
+    public boolean atualizar(Titulo t) throws SQLException {
+        return tituloDAO.atualizar(t);
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        return tituloDAO.excluir(id);
+    }
 
     public List<Titulo> listarPorTime(int timeId) throws SQLException {
         return tituloDAO.listarPorTime(timeId);

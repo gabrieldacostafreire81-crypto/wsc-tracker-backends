@@ -28,6 +28,19 @@ public class TransferenciaResource {
         Transferencia criada = transferenciaService.criar(t);
         ctx.status(201).json(criada);
     }
+    public void atualizar(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        Transferencia transferencia = ctx.bodyAsClass(Transferencia.class);
+        transferencia.setId(id);
+        boolean ok = transferenciaService.atualizar(transferencia);
+        if (ok) ctx.json(transferencia); else ctx.status(404).result("Não encontrado");
+    }
+
+    public void excluir(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        boolean ok = transferenciaService.excluir(id);
+        if (ok) ctx.status(204); else ctx.status(404).result("Não encontrado");
+    }
 
     public void buscarPorId(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));

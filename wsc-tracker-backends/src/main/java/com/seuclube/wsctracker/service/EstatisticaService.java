@@ -14,6 +14,14 @@ public class EstatisticaService {
         return estatisticaDAO.salvar(estatistica);
     }
 
+    public boolean atualizar(EstatisticaJogadorTemporada estatistica) throws SQLException {
+        return estatisticaDAO.atualizar(estatistica);
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        return estatisticaDAO.excluir(id);
+    }
+
     public List<EstatisticaJogadorTemporada> listarPorTemporada(int temporadaId) throws SQLException {
         return estatisticaDAO.listarPorTemporada(temporadaId);
     }

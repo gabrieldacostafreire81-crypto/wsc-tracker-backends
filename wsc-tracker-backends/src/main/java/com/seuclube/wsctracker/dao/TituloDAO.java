@@ -67,4 +67,24 @@ public class TituloDAO {
                 rs.getInt("competicao_id")
         );
     }
+    public boolean atualizar(Titulo t) throws SQLException {
+        String sql = "UPDATE titulo SET time_id = ?, temporada_id = ?, competicao_id = ? WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, t.getTimeId());
+            stmt.setInt(2, t.getTemporadaId());
+            stmt.setInt(3, t.getCompeticaoId());
+            stmt.setInt(4, t.getId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM titulo WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

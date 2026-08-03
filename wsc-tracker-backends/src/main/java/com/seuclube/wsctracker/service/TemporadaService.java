@@ -13,6 +13,13 @@ public class TemporadaService {
     public Temporada criar(Temporada temporada) throws SQLException {
         return temporadaDAO.salvar(temporada);
     }
+    public boolean atualizar(Temporada temporada ) throws SQLException {
+        return temporadaDAO.atualizar(temporada);
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        return temporadaDAO.excluir(id);
+    }
 
     public List<Temporada> listarTodas() throws SQLException {
         return temporadaDAO.listarTodas();

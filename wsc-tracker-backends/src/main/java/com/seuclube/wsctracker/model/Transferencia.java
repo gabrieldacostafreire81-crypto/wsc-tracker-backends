@@ -88,4 +88,11 @@ public class Transferencia {
     public void setData(String data) {
         this.data = data;
     }
+    private String jogadorNomeNovo;
+    private String jogadorPosicaoNovo;
+
+    public String getJogadorNomeNovo() { return jogadorNomeNovo; }
+    public void setJogadorNomeNovo(String jogadorNomeNovo) { this.jogadorNomeNovo = jogadorNomeNovo; }
+    public String getJogadorPosicaoNovo() { return jogadorPosicaoNovo; }
+    public void setJogadorPosicaoNovo(String jogadorPosicaoNovo) { this.jogadorPosicaoNovo = jogadorPosicaoNovo; }
 }

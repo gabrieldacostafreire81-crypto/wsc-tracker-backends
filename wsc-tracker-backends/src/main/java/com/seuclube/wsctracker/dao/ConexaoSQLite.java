@@ -35,22 +35,29 @@ public class ConexaoSQLite {
     }
 
     public static void executarSchema() {
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-
+        try {
+            Connection conn = getConnection();
             String sql = new String(Files.readAllBytes(Paths.get("schema.sql")));
 
             for (String comando : sql.split(";")) {
                 String limpo = comando.trim();
-                if (!limpo.isEmpty()) {
+                if (limpo.isEmpty()) continue;
+
+                try (Statement stmt = conn.createStatement()) {
                     stmt.execute(limpo);
+                } catch (SQLException e) {
+                    // Comandos como "ALTER TABLE ADD COLUMN" falham na 2ª execução em diante
+                    // (a coluna já existe) — isso é esperado e não deve travar o restante do schema.
+                    if (!e.getMessage().contains("duplicate column name")) {
+                        System.err.println("Aviso ao aplicar comando do schema: " + e.getMessage());
+                    }
                 }
             }
-            System.out.println("Schema aplicado com sucesso! Tabelas criadas.");
+            System.out.println("Schema aplicado com sucesso! Tabelas criadas/atualizadas.");
         } catch (IOException e) {
             System.err.println("Não encontrei o arquivo schema.sql: " + e.getMessage());
         } catch (SQLException e) {
-            System.err.println("Erro ao aplicar schema: " + e.getMessage());
+            System.err.println("Erro ao conectar para aplicar schema: " + e.getMessage());
         }
     }
 }

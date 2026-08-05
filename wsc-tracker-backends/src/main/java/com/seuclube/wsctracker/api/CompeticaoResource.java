@@ -19,6 +19,19 @@ public class CompeticaoResource {
         Competicao criada = competicaoService.criar(c);
         ctx.status(201).json(criada);
     }
+    public void atualizar(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        Competicao competicao = ctx.bodyAsClass(Competicao.class);
+        competicao.setId(id);
+        boolean ok = competicaoService.atualizar(competicao);
+        if (ok) ctx.json(competicao); else ctx.status(404).result("Não encontrado");
+    }
+
+    public void excluir(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        boolean ok = competicaoService.excluir(id);
+        if (ok) ctx.status(204); else ctx.status(404).result("Não encontrado");
+    }
 
     public void buscarPorId(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));

@@ -81,3 +81,35 @@ CREATE INDEX IF NOT EXISTS idx_transferencia_jogador ON transferencia(jogador_id
 CREATE INDEX IF NOT EXISTS idx_transferencia_temporada ON transferencia(temporada_id);
 CREATE INDEX IF NOT EXISTS idx_temporada_time ON temporada(time_id);
 CREATE INDEX IF NOT EXISTS idx_titulo_time ON titulo(time_id);
+
+-- ================= v3: Fase 8 =================
+
+-- Jogador: origem da base e overall de chegada
+ALTER TABLE jogador ADD COLUMN origem_base INTEGER DEFAULT 0;
+ALTER TABLE jogador ADD COLUMN data_chegada_base TEXT;
+ALTER TABLE jogador ADD COLUMN overall_base INTEGER;
+
+-- Temporada: nível de treino/academia
+ALTER TABLE temporada ADD COLUMN nivel_treino INTEGER DEFAULT 0;
+
+-- Estatística por temporada: overall daquela temporada específica
+ALTER TABLE estatistica_jogador_temporada ADD COLUMN overall INTEGER;
+
+-- Elenco: quem está no time em cada temporada, e como chegou/saiu
+CREATE TABLE IF NOT EXISTS elenco (
+                                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                      temporada_id INTEGER NOT NULL,
+                                      jogador_id INTEGER NOT NULL,
+                                      status TEXT NOT NULL,           -- 'inicial' ou 'atual'
+                                      origem_entrada TEXT,            -- 'herdado' | 'compra' | 'base' | 'emprestimo'
+                                      data_entrada TEXT,
+                                      motivo_saida TEXT,              -- 'venda' | 'emprestimo' | 'dispensa' | NULL
+                                      data_saida TEXT,
+                                      FOREIGN KEY (temporada_id) REFERENCES temporada(id) ON DELETE CASCADE,
+    FOREIGN KEY (jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
+    );
+
+CREATE INDEX IF NOT EXISTS idx_elenco_temporada ON elenco(temporada_id);
+CREATE INDEX IF NOT EXISTS idx_elenco_jogador ON elenco(jogador_id);
+-- Temporada: trava de edição após finalizada
+ALTER TABLE temporada ADD COLUMN encerrada INTEGER DEFAULT 0;

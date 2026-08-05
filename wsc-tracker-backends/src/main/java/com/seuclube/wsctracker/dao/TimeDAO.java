@@ -65,4 +65,24 @@ public class TimeDAO {
                 rs.getString("observacoes")
         );
     }
+    public boolean atualizar(Time time) throws SQLException {
+        String sql = "UPDATE time SET nome = ?, temporada_fundacao = ?, observacoes = ? WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, time.getNome());
+            stmt.setInt(2, time.getTemporadaFundacao());
+            stmt.setString(3, time.getObservacoes());
+            stmt.setInt(4, time.getId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM time WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

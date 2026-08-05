@@ -17,6 +17,13 @@ public class JogadorService {
     public Jogador criar(Jogador jogador) throws SQLException {
         return jogadorDAO.salvar(jogador);
     }
+    public boolean atualizar(Jogador jogador) throws SQLException {
+        return jogadorDAO.atualizar(jogador);
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        return jogadorDAO.excluir(id);
+    }
 
     public List<Jogador> listarTodos() throws SQLException {
         return jogadorDAO.listarTodos();

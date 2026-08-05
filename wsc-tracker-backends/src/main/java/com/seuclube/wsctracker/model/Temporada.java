@@ -7,17 +7,10 @@ public class Temporada {
     private String divisao;
     private Integer posicaoFinal;
     private String observacoes;
+    private boolean encerrada;
+    private Integer nivelTreino;
 
     public Temporada() {
-    }
-
-    public Temporada(int id, int timeId, int numero, String divisao, Integer posicaoFinal, String observacoes) {
-        this.id = id;
-        this.timeId = timeId;
-        this.numero = numero;
-        this.divisao = divisao;
-        this.posicaoFinal = posicaoFinal;
-        this.observacoes = observacoes;
     }
 
     public int getId() {
@@ -66,5 +59,21 @@ public class Temporada {
 
     public void setObservacoes(String observacoes) {
         this.observacoes = observacoes;
+    }
+
+    public boolean isEncerrada() {
+        return encerrada;
+    }
+
+    public void setEncerrada(boolean encerrada) {
+        this.encerrada = encerrada;
+    }
+
+    public Integer getNivelTreino() {
+        return nivelTreino;
+    }
+
+    public void setNivelTreino(Integer nivelTreino) {
+        this.nivelTreino = nivelTreino;
     }
 }

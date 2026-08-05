@@ -59,4 +59,23 @@ public class CompeticaoDAO {
     private Competicao mapear(ResultSet rs) throws SQLException {
         return new Competicao(rs.getInt("id"), rs.getString("nome"), rs.getString("tipo"));
     }
+    public boolean atualizar(Competicao c) throws SQLException {
+        String sql = "UPDATE competicao SET nome = ?, tipo = ? WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, c.getNome());
+            stmt.setString(2, c.getTipo());
+            stmt.setInt(3, c.getId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM competicao WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

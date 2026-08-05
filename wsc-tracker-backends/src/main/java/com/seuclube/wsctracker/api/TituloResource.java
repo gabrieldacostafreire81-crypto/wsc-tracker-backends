@@ -20,6 +20,19 @@ public class TituloResource {
         Titulo criado = tituloService.criar(t);
         ctx.status(201).json(criado);
     }
+    public void atualizar(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        Titulo titulo = ctx.bodyAsClass(Titulo.class);
+        titulo.setId(id);
+        boolean ok = tituloService.atualizar(titulo);
+        if (ok) ctx.json(titulo); else ctx.status(404).result("Não encontrado");
+    }
+
+    public void excluir(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        boolean ok = tituloService.excluir(id);
+        if (ok) ctx.status(204); else ctx.status(404).result("Não encontrado");
+    }
 
     public void buscarPorId(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));

@@ -29,6 +29,13 @@ public class TimeService {
     public Time buscarPorId(int id) throws SQLException {
         return timeDAO.buscarPorId(id);
     }
+    public boolean atualizar(Time time) throws SQLException {
+        return timeDAO.atualizar(time);
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        return timeDAO.excluir(id);
+    }
 
     /** RF12 — total de jogadores distintos que já passaram pelo clube. */
     public int totalJogadoresHistorico(int timeId) throws SQLException {

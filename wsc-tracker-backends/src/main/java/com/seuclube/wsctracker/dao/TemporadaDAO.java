@@ -10,8 +10,8 @@ public class TemporadaDAO {
 
     public Temporada salvar(Temporada temporada) throws SQLException {
         String sql = "INSERT INTO temporada (time_id, numero, divisao, posicao_final, observacoes) VALUES (?, ?, ?, ?, ?)";
-        Connection conn = ConexaoSQLite.getConnection();        try (
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, temporada.getTimeId());
             stmt.setInt(2, temporada.getNumero());
@@ -39,8 +39,8 @@ public class TemporadaDAO {
         String sql = "SELECT * FROM temporada";
         List<Temporada> temporadas = new ArrayList<>();
 
-        Connection conn = ConexaoSQLite.getConnection();        try (
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -54,8 +54,8 @@ public class TemporadaDAO {
         String sql = "SELECT * FROM temporada WHERE time_id = ? ORDER BY numero";
         List<Temporada> temporadas = new ArrayList<>();
 
-        Connection conn = ConexaoSQLite.getConnection();        try (
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, timeId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -69,8 +69,8 @@ public class TemporadaDAO {
 
     public Temporada buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM temporada WHERE id = ?";
-        Connection conn = ConexaoSQLite.getConnection();        try (
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -82,17 +82,59 @@ public class TemporadaDAO {
         return null;
     }
 
-    private Temporada mapear(ResultSet rs) throws SQLException {
-        int posicaoFinal = rs.getInt("posicao_final");
-        Integer posicaoFinalObj = rs.wasNull() ? null : posicaoFinal;
+    public boolean atualizar(Temporada temporada) throws SQLException {
+        String sql = "UPDATE temporada SET time_id = ?, numero = ?, divisao = ?, posicao_final = ?, observacoes = ? WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, temporada.getTimeId());
+            stmt.setInt(2, temporada.getNumero());
+            stmt.setString(3, temporada.getDivisao());
+            if (temporada.getPosicaoFinal() != null) {
+                stmt.setInt(4, temporada.getPosicaoFinal());
+            } else {
+                stmt.setNull(4, Types.INTEGER);
+            }
+            stmt.setString(5, temporada.getObservacoes());
+            stmt.setInt(6, temporada.getId());
+            return stmt.executeUpdate() > 0;
+        }
+    }
 
-        return new Temporada(
-                rs.getInt("id"),
-                rs.getInt("time_id"),
-                rs.getInt("numero"),
-                rs.getString("divisao"),
-                posicaoFinalObj,
-                rs.getString("observacoes")
-        );
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM temporada WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    /** Trava a temporada para edição — usado pelo FinalizarTemporadaService. */
+    public boolean marcarEncerrada(int id) throws SQLException {
+        String sql = "UPDATE temporada SET encerrada = 1 WHERE id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    private Temporada mapear(ResultSet rs) throws SQLException {
+        Temporada t = new Temporada();
+        t.setId(rs.getInt("id"));
+        t.setTimeId(rs.getInt("time_id"));
+        t.setNumero(rs.getInt("numero"));
+        t.setDivisao(rs.getString("divisao"));
+
+        int posicaoFinal = rs.getInt("posicao_final");
+        t.setPosicaoFinal(rs.wasNull() ? null : posicaoFinal);
+
+        t.setObservacoes(rs.getString("observacoes"));
+        t.setEncerrada(rs.getBoolean("encerrada"));
+
+        int nivelTreino = rs.getInt("nivel_treino");
+        t.setNivelTreino(rs.wasNull() ? null : nivelTreino);
+
+        return t;
     }
 }

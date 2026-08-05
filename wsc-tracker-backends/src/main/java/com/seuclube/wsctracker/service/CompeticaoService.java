@@ -13,6 +13,13 @@ public class CompeticaoService {
     public Competicao criar(Competicao c) throws SQLException {
         return competicaoDAO.salvar(c);
     }
+    public boolean atualizar(Competicao c) throws SQLException {
+        return competicaoDAO.atualizar(c);
+    }
+
+    public boolean excluir(int id) throws SQLException {
+        return competicaoDAO.excluir(id);
+    }
 
     public List<Competicao> listarTodas() throws SQLException {
         return competicaoDAO.listarTodas();

@@ -19,6 +19,19 @@ public class TimeResource {
         Time criado = timeService.criar(time);
         ctx.status(201).json(criado);
     }
+    public void atualizar(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        Time time = ctx.bodyAsClass(Time.class);
+        time.setId(id);
+        boolean ok = timeService.atualizar(time);
+        if (ok) ctx.json(time); else ctx.status(404).result("Time não encontrado");
+    }
+
+    public void excluir(Context ctx) throws SQLException {
+        int id = Integer.parseInt(ctx.pathParam("id"));
+        boolean ok = timeService.excluir(id);
+        if (ok) ctx.status(204); else ctx.status(404).result("Time não encontrado");
+    }
 
     public void buscarPorId(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));

@@ -17,6 +17,7 @@ public class Main {
         CompeticaoResource competicaoResource = new CompeticaoResource();
         TituloResource tituloResource = new TituloResource();
         ElencoResource elencoResource = new ElencoResource();
+        TemporadaCompeticaoResource temporadaCompeticaoResource = new TemporadaCompeticaoResource();
 
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableCors(cors -> {
@@ -82,6 +83,13 @@ public class Main {
                //Elenco
             config.routes.get("/api/temporadas/{temporadaId}/elenco-atual", elencoResource::listarAtual);
             config.routes.get("/api/temporadas/{temporadaId}/elenco-todos", elencoResource::listarTudo);
+
+
+                // Temporada competição
+            config.routes.get("/api/temporadas/{temporadaId}/competicoes", temporadaCompeticaoResource::listarPorTemporada);
+            config.routes.post("/api/temporadas-competicoes", temporadaCompeticaoResource::adicionar);
+            config.routes.put("/api/temporadas-competicoes/{id}/resultado", temporadaCompeticaoResource::registrarResultado);
+            config.routes.delete("/api/temporadas-competicoes/{id}", temporadaCompeticaoResource::excluir);
         }).start(7000);
     }
 }

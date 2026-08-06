@@ -87,4 +87,26 @@ public class TituloDAO {
             return stmt.executeUpdate() > 0;
         }
     }
+    public Titulo buscarPorTemporadaECompeticao(int temporadaId, int competicaoId) throws SQLException {
+        String sql = "SELECT * FROM titulo WHERE temporada_id = ? AND competicao_id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, temporadaId);
+            stmt.setInt(2, competicaoId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return mapear(rs);
+            }
+        }
+        return null;
+    }
+
+    public boolean excluirPorTemporadaECompeticao(int temporadaId, int competicaoId) throws SQLException {
+        String sql = "DELETE FROM titulo WHERE temporada_id = ? AND competicao_id = ?";
+        Connection conn = ConexaoSQLite.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, temporadaId);
+            stmt.setInt(2, competicaoId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

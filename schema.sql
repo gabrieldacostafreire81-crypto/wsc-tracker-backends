@@ -1,5 +1,5 @@
--- schema.sql — WSC Tracker
--- Execute este script uma vez para criar a estrutura do banco.
+-- schema.sql — WSC Tracker (v3.1 consolidado)
+-- Execute este script uma vez para criar a estrutura do banco (idempotente).
 
 CREATE TABLE IF NOT EXISTS time (
                                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS jogador (
                                        nacionalidade TEXT,
                                        data_nascimento TEXT,
                                        time_atual_id INTEGER,
+                                       origem_base INTEGER DEFAULT 0,
+                                       data_chegada_base TEXT,
+                                       overall_base INTEGER,
                                        FOREIGN KEY (time_atual_id) REFERENCES time(id) ON DELETE SET NULL
     );
 
@@ -22,9 +25,9 @@ CREATE TABLE IF NOT EXISTS temporada (
                                          id INTEGER PRIMARY KEY AUTOINCREMENT,
                                          time_id INTEGER NOT NULL,
                                          numero INTEGER NOT NULL,
-                                         divisao TEXT,
-                                         posicao_final INTEGER,
                                          observacoes TEXT,
+                                         encerrada INTEGER DEFAULT 0,
+                                         nivel_treino INTEGER DEFAULT 0,
                                          FOREIGN KEY (time_id) REFERENCES time(id) ON DELETE CASCADE
     );
 
@@ -40,6 +43,7 @@ CREATE TABLE IF NOT EXISTS estatistica_jogador_temporada (
                                                              cartoes_vermelhos INTEGER DEFAULT 0,
                                                              valor_mercado REAL,
                                                              status TEXT,
+                                                             overall INTEGER,
                                                              FOREIGN KEY (jogador_id) REFERENCES jogador(id) ON DELETE CASCADE,
     FOREIGN KEY (temporada_id) REFERENCES temporada(id) ON DELETE CASCADE,
     UNIQUE (jogador_id, temporada_id)
@@ -61,8 +65,20 @@ CREATE TABLE IF NOT EXISTS transferencia (
 CREATE TABLE IF NOT EXISTS competicao (
                                           id INTEGER PRIMARY KEY AUTOINCREMENT,
                                           nome TEXT NOT NULL,
-                                          tipo TEXT
+                                          formato TEXT NOT NULL,        -- 'liga' | 'copa'
+                                          abrangencia TEXT              -- 'nacional' | 'continental'
 );
+
+CREATE TABLE IF NOT EXISTS temporada_competicao (
+                                                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                    temporada_id INTEGER NOT NULL,
+                                                    competicao_id INTEGER NOT NULL,
+                                                    resultado_posicao INTEGER,    -- preenchido quando a competição é 'liga'
+                                                    resultado_fase TEXT,          -- preenchido quando a competição é 'copa'
+                                                    FOREIGN KEY (temporada_id) REFERENCES temporada(id) ON DELETE CASCADE,
+    FOREIGN KEY (competicao_id) REFERENCES competicao(id) ON DELETE CASCADE,
+    UNIQUE (temporada_id, competicao_id)
+    );
 
 CREATE TABLE IF NOT EXISTS titulo (
                                       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,45 +87,29 @@ CREATE TABLE IF NOT EXISTS titulo (
                                       competicao_id INTEGER NOT NULL,
                                       FOREIGN KEY (time_id) REFERENCES time(id) ON DELETE CASCADE,
     FOREIGN KEY (temporada_id) REFERENCES temporada(id) ON DELETE CASCADE,
-    FOREIGN KEY (competicao_id) REFERENCES competicao(id) ON DELETE CASCADE
+    FOREIGN KEY (competicao_id) REFERENCES competicao(id) ON DELETE CASCADE,
+    UNIQUE (temporada_id, competicao_id)
     );
 
--- Índices (seção 9 do documento de arquitetura)
+CREATE TABLE IF NOT EXISTS elenco (
+                                      id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                      temporada_id INTEGER NOT NULL,
+                                      jogador_id INTEGER NOT NULL,
+                                      status TEXT NOT NULL,
+                                      origem_entrada TEXT,
+                                      data_entrada TEXT,
+                                      motivo_saida TEXT,
+                                      data_saida TEXT,
+                                      FOREIGN KEY (temporada_id) REFERENCES temporada(id) ON DELETE CASCADE,
+    FOREIGN KEY (jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
+    );
+
 CREATE INDEX IF NOT EXISTS idx_estatistica_jogador ON estatistica_jogador_temporada(jogador_id);
 CREATE INDEX IF NOT EXISTS idx_estatistica_temporada ON estatistica_jogador_temporada(temporada_id);
 CREATE INDEX IF NOT EXISTS idx_transferencia_jogador ON transferencia(jogador_id);
 CREATE INDEX IF NOT EXISTS idx_transferencia_temporada ON transferencia(temporada_id);
 CREATE INDEX IF NOT EXISTS idx_temporada_time ON temporada(time_id);
 CREATE INDEX IF NOT EXISTS idx_titulo_time ON titulo(time_id);
-
--- ================= v3: Fase 8 =================
-
--- Jogador: origem da base e overall de chegada
-ALTER TABLE jogador ADD COLUMN origem_base INTEGER DEFAULT 0;
-ALTER TABLE jogador ADD COLUMN data_chegada_base TEXT;
-ALTER TABLE jogador ADD COLUMN overall_base INTEGER;
-
--- Temporada: nível de treino/academia
-ALTER TABLE temporada ADD COLUMN nivel_treino INTEGER DEFAULT 0;
-
--- Estatística por temporada: overall daquela temporada específica
-ALTER TABLE estatistica_jogador_temporada ADD COLUMN overall INTEGER;
-
--- Elenco: quem está no time em cada temporada, e como chegou/saiu
-CREATE TABLE IF NOT EXISTS elenco (
-                                      id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                      temporada_id INTEGER NOT NULL,
-                                      jogador_id INTEGER NOT NULL,
-                                      status TEXT NOT NULL,           -- 'inicial' ou 'atual'
-                                      origem_entrada TEXT,            -- 'herdado' | 'compra' | 'base' | 'emprestimo'
-                                      data_entrada TEXT,
-                                      motivo_saida TEXT,              -- 'venda' | 'emprestimo' | 'dispensa' | NULL
-                                      data_saida TEXT,
-                                      FOREIGN KEY (temporada_id) REFERENCES temporada(id) ON DELETE CASCADE,
-    FOREIGN KEY (jogador_id) REFERENCES jogador(id) ON DELETE CASCADE
-    );
-
 CREATE INDEX IF NOT EXISTS idx_elenco_temporada ON elenco(temporada_id);
 CREATE INDEX IF NOT EXISTS idx_elenco_jogador ON elenco(jogador_id);
--- Temporada: trava de edição após finalizada
-ALTER TABLE temporada ADD COLUMN encerrada INTEGER DEFAULT 0;
+CREATE INDEX IF NOT EXISTS idx_temporada_competicao_temporada ON temporada_competicao(temporada_id);

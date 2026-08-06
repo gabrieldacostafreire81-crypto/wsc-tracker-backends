@@ -3,38 +3,21 @@ package com.seuclube.wsctracker.model;
 public class Competicao {
     private int id;
     private String nome;
-    private String tipo;
+    private String formato;       // "liga" | "copa"
+    private String abrangencia;   // "nacional" | "continental"
 
     public Competicao() {
     }
 
-    public Competicao(int id, String nome, String tipo) {
-        this.id = id;
-        this.nome = nome;
-        this.tipo = tipo;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public int getId() {
-        return id;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public String getFormato() { return formato; }
+    public void setFormato(String formato) { this.formato = formato; }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
+    public String getAbrangencia() { return abrangencia; }
+    public void setAbrangencia(String abrangencia) { this.abrangencia = abrangencia; }
 }

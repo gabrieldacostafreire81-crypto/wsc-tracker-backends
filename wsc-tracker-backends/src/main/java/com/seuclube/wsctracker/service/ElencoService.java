@@ -13,6 +13,9 @@ public class ElencoService {
 
     /** Adiciona um jogador ao elenco ATUAL de uma temporada (compra, base, ou herança). */
     public Elenco adicionarAoElencoAtual(int temporadaId, int jogadorId, String origemEntrada) throws SQLException {
+        Elenco existente = elencoDAO.buscarAtivoPorJogadorETemporada(jogadorId, temporadaId);
+        if (existente != null) return existente; // já está no elenco atual, não duplica
+
         Elenco e = new Elenco();
         e.setTemporadaId(temporadaId);
         e.setJogadorId(jogadorId);

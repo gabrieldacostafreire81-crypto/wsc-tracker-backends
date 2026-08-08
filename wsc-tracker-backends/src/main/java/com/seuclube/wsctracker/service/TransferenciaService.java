@@ -55,7 +55,11 @@ public class TransferenciaService {
     }
 
     public boolean atualizar(Transferencia t) throws SQLException {
-        return transferenciaDAO.atualizar(t);
+        boolean ok = transferenciaDAO.atualizar(t);
+        if (ok) {
+            aplicarEfeitoNoElenco(t);
+        }
+        return ok;
     }
 
     public boolean excluir(int id) throws SQLException {

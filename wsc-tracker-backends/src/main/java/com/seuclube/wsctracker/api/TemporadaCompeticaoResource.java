@@ -1,6 +1,5 @@
 package com.seuclube.wsctracker.api;
 
-import com.seuclube.wsctracker.model.Competicao;
 import com.seuclube.wsctracker.service.TemporadaCompeticaoService;
 import io.javalin.http.Context;
 
@@ -18,17 +17,20 @@ public class TemporadaCompeticaoResource {
 
     public void adicionar(Context ctx) throws SQLException {
         Map<String, Object> body = ctx.bodyAsClass(Map.class);
-        int temporadaId = (int) (double) (Double) body.get("temporadaId");
-        int competicaoId = (int) (double) (Double) body.get("competicaoId");
-        ctx.status(201).json(service.adicionarCompeticao(temporadaId, competicaoId));
+        int temporadaId = paraInt(body.get("temporadaId"));
+        int competicaoId = paraInt(body.get("competicaoId"));
+        try {
+            ctx.status(201).json(service.adicionarCompeticao(temporadaId, competicaoId));
+        } catch (IllegalStateException e) {
+            ctx.status(409).result(e.getMessage());
+        }
     }
 
     public void registrarResultado(Context ctx) throws SQLException {
         int id = Integer.parseInt(ctx.pathParam("id"));
         Map<String, Object> body = ctx.bodyAsClass(Map.class);
 
-        Integer resultadoPosicao = body.get("resultadoPosicao") != null
-                ? (int) (double) (Double) body.get("resultadoPosicao") : null;
+        Integer resultadoPosicao = paraIntOuNull(body.get("resultadoPosicao"));
         String resultadoFase = (String) body.get("resultadoFase");
 
         boolean ok = service.registrarResultado(id, resultadoPosicao, resultadoFase);
@@ -39,5 +41,17 @@ public class TemporadaCompeticaoResource {
         int id = Integer.parseInt(ctx.pathParam("id"));
         boolean ok = service.excluir(id);
         if (ok) ctx.status(204); else ctx.status(404).result("Não encontrado");
+    }
+
+    /** Converte com segurança, aceitando Integer, Long ou Double — o que o Jackson mandar. */
+    private int paraInt(Object valor) {
+        if (valor instanceof Number) return ((Number) valor).intValue();
+        throw new IllegalArgumentException("Esperava um número, recebi: " + valor);
+    }
+
+    private Integer paraIntOuNull(Object valor) {
+        if (valor == null) return null;
+        if (valor instanceof Number) return ((Number) valor).intValue();
+        return null;
     }
 }

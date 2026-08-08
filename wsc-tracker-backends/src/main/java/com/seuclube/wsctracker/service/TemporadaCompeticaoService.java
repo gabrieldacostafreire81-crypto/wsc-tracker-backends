@@ -21,6 +21,12 @@ public class TemporadaCompeticaoService {
 
     /** Declara que o clube vai disputar uma competição nesta temporada (sem resultado ainda). */
     public TemporadaCompeticao adicionarCompeticao(int temporadaId, int competicaoId) throws SQLException {
+        List<TemporadaCompeticao> existentes = temporadaCompeticaoDAO.listarPorTemporada(temporadaId);
+        boolean jaExiste = existentes.stream().anyMatch(tc -> tc.getCompeticaoId() == competicaoId);
+        if (jaExiste) {
+            throw new IllegalStateException("Esta competição já foi adicionada a esta temporada.");
+        }
+
         TemporadaCompeticao tc = new TemporadaCompeticao();
         tc.setTemporadaId(temporadaId);
         tc.setCompeticaoId(competicaoId);

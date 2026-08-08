@@ -113,3 +113,4 @@ CREATE INDEX IF NOT EXISTS idx_titulo_time ON titulo(time_id);
 CREATE INDEX IF NOT EXISTS idx_elenco_temporada ON elenco(temporada_id);
 CREATE INDEX IF NOT EXISTS idx_elenco_jogador ON elenco(jogador_id);
 CREATE INDEX IF NOT EXISTS idx_temporada_competicao_temporada ON temporada_competicao(temporada_id);
+ALTER TABLE jogador ADD COLUMN time_base_id INTEGER;

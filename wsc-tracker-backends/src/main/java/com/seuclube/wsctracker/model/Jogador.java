@@ -10,9 +10,13 @@ public class Jogador {
     private boolean origemBase;
     private String dataChegadaBase;
     private Integer overallBase;
+    private Integer timeBaseId;
 
     public Jogador() {
     }
+
+    public Integer getTimeBaseId() { return timeBaseId; }
+    public void setTimeBaseId(Integer timeBaseId) { this.timeBaseId = timeBaseId; }
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

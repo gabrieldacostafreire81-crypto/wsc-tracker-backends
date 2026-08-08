@@ -15,8 +15,12 @@ public class JogadorService {
     private final EstatisticaDAO estatisticaDAO = new EstatisticaDAO();
 
     public Jogador criar(Jogador jogador) throws SQLException {
+        if (jogador.isOrigemBase() && jogador.getTimeBaseId() == null) {
+            jogador.setTimeBaseId(jogador.getTimeAtualId());
+        }
         return jogadorDAO.salvar(jogador);
     }
+
     public boolean atualizar(Jogador jogador) throws SQLException {
         return jogadorDAO.atualizar(jogador);
     }

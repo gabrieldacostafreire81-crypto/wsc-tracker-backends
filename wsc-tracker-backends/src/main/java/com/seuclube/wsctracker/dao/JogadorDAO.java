@@ -10,7 +10,7 @@ public class JogadorDAO {
 
     public Jogador salvar(Jogador jogador) throws SQLException {
         String sql = "INSERT INTO jogador (nome, posicao, nacionalidade, data_nascimento, time_atual_id, " +
-                "origem_base, data_chegada_base, overall_base) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                "origem_base, data_chegada_base, overall_base, time_base_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = ConexaoSQLite.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, jogador.getNome());
@@ -31,6 +31,12 @@ public class JogadorDAO {
                 stmt.setInt(8, jogador.getOverallBase());
             } else {
                 stmt.setNull(8, Types.INTEGER);
+            }
+
+            if (jogador.getTimeBaseId() != null) {
+                stmt.setInt(9, jogador.getTimeBaseId());
+            } else {
+                stmt.setNull(9, Types.INTEGER);
             }
 
             stmt.executeUpdate();
@@ -119,6 +125,9 @@ public class JogadorDAO {
 
         int overallBase = rs.getInt("overall_base");
         j.setOverallBase(rs.wasNull() ? null : overallBase);
+
+        int timeBaseId = rs.getInt("time_base_id");
+        j.setTimeBaseId(rs.wasNull() ? null : timeBaseId);
 
         return j;
     }

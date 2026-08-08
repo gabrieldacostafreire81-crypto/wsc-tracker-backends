@@ -18,6 +18,8 @@ public class Main {
         TituloResource tituloResource = new TituloResource();
         ElencoResource elencoResource = new ElencoResource();
         TemporadaCompeticaoResource temporadaCompeticaoResource = new TemporadaCompeticaoResource();
+        EstatisticaTimeResource estatisticaTimeResource = new EstatisticaTimeResource();
+// ...
 
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableCors(cors -> {
@@ -90,6 +92,10 @@ public class Main {
             config.routes.post("/api/temporadas-competicoes", temporadaCompeticaoResource::adicionar);
             config.routes.put("/api/temporadas-competicoes/{id}/resultado", temporadaCompeticaoResource::registrarResultado);
             config.routes.delete("/api/temporadas-competicoes/{id}", temporadaCompeticaoResource::excluir);
+
+                // Estartisticas Geral time
+            config.routes.get("/api/temporadas/{temporadaId}/estatistica-time", estatisticaTimeResource::buscar);
+            config.routes.put("/api/temporadas/{temporadaId}/estatistica-time", estatisticaTimeResource::salvar);
         }).start(7000);
     }
 }

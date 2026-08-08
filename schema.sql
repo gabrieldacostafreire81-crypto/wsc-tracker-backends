@@ -114,3 +114,14 @@ CREATE INDEX IF NOT EXISTS idx_elenco_temporada ON elenco(temporada_id);
 CREATE INDEX IF NOT EXISTS idx_elenco_jogador ON elenco(jogador_id);
 CREATE INDEX IF NOT EXISTS idx_temporada_competicao_temporada ON temporada_competicao(temporada_id);
 ALTER TABLE jogador ADD COLUMN time_base_id INTEGER;
+
+CREATE TABLE IF NOT EXISTS estatistica_time (
+                                                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                temporada_id INTEGER NOT NULL UNIQUE,
+                                                vitorias INTEGER DEFAULT 0,
+                                                empates INTEGER DEFAULT 0,
+                                                derrotas INTEGER DEFAULT 0,
+                                                gols_feitos INTEGER DEFAULT 0,
+                                                gols_sofridos INTEGER DEFAULT 0,
+                                                FOREIGN KEY (temporada_id) REFERENCES temporada(id) ON DELETE CASCADE
+    );
